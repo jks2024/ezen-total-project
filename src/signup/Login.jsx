@@ -56,8 +56,8 @@ const Login = () => {
     console.log(response.data);
     if (response.data) {
       // 내부 저장소에 로그인 성공 시 이메일과 로그인 상태 저장
-      window.localStorage.setItem("email", inputEmail);
-      window.localStorage.setItem("isLogin", "TRUE");
+      localStorage.setItem("email", inputEmail);
+      localStorage.setItem("isLogin", "TRUE");
       navigate("/home");
     } else {
       setModalOpen(true);
