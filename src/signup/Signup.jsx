@@ -80,6 +80,7 @@ const Signup = () => {
     setInputName(e.target.value);
     setIsName(true);
   };
+
   const onClickLogin = async () => {
     const res = await AxiosApi.memberReg(inputEmail, inputPw, inputName);
     console.log(res.data);
