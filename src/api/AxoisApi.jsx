@@ -27,6 +27,10 @@ const AxiosApi = {
   memberGetOne: async (email) => {
     return await axios.get(EZEN_DOMAIN + `/users/detail/${email}`);
   },
+  // 회원 전제 조회
+  memberGet: async () => {
+    return await axios.get(EZEN_DOMAIN + `/users/list`);
+  },
 };
 
 export default AxiosApi;
