@@ -9,7 +9,7 @@ const Home = () => {
         navigate("/members");
         break;
       case 2:
-        navigate("/news");
+        navigate("/themeSetting");
         break;
       case 3:
         navigate("/boards");
@@ -32,7 +32,7 @@ const Home = () => {
   return (
     <ButtonContainer>
       <TransBtn onClick={() => onClickBtn(1)}>회원리스트</TransBtn>
-      <TransBtn onClick={() => onClickBtn(2)}>뉴스</TransBtn>
+      <TransBtn onClick={() => onClickBtn(2)}>컬러 테마 변경</TransBtn>
       <TransBtn onClick={() => onClickBtn(3)}>게시판</TransBtn>
       <TransBtn onClick={() => onClickBtn(4)}>카테고리</TransBtn>
       <TransBtn onClick={() => onClickBtn(5)}>영화정보</TransBtn>

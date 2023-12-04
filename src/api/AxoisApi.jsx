@@ -31,6 +31,33 @@ const AxiosApi = {
   memberGet: async () => {
     return await axios.get(EZEN_DOMAIN + `/users/list`);
   },
+  // 회원 정보 수정
+  memberUpdate: async (email, name, image) => {
+    const member = {
+      email: email,
+      name: name,
+      image: image,
+    };
+    return await axios.put(EZEN_DOMAIN + `/users/modify`, member);
+  },
+  // 카테고리 조회
+  cateList: async () => {
+    return await axios.get(EZEN_DOMAIN + `/api/category/list`);
+  },
+  // 카테고리 만들기
+  cateInsert: async (email, category) => {
+    const cate = {
+      email: email,
+      categoryName: category,
+    };
+    return await axios.post(EZEN_DOMAIN + `/api/category/new`, cate);
+  },
+  // 카테고리 삭제
+  cateDelete: async (categoryId) => {
+    return await axios.delete(
+      EZEN_DOMAIN + `api/category/delete/${categoryId}`
+    );
+  },
 };
 
 export default AxiosApi;

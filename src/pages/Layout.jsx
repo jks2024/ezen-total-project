@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import AxiosApi from "../api/AxoisApi";
 import {
@@ -18,6 +18,7 @@ import { FiSettings } from "react-icons/fi";
 import { FaHome, FaClipboardList, FaRegNewspaper } from "react-icons/fa";
 import { BiCameraMovie } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
+import { UserContext } from "../context/UserStore";
 
 const Layout = () => {
   // 나중에 전역 상태 추가 필요
@@ -27,6 +28,8 @@ const Layout = () => {
   const navigate = useNavigate();
   const email = localStorage.getItem("email");
   const [member, setMemer] = useState("");
+  const context = useContext(UserContext);
+  const { color, name } = context;
 
   const onClickLeft = () => {
     setIsMenuOpen(!isMenuOpen); // 토글 기능으로 동작
@@ -45,10 +48,10 @@ const Layout = () => {
       }
     };
     getMember();
-  });
+  }, [name]);
 
   return (
-    <Container>
+    <Container color={color}>
       <header className="mainhead">
         <div className="hambeger">
           {isMenuOpen ? (

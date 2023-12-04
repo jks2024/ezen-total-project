@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AxiosApi from "../api/AxoisApi";
 import styled from "styled-components";
+import Common from "../utils/Common";
 
 const Container = styled.div`
   display: flex;
@@ -72,7 +73,7 @@ const Members = () => {
       }
     };
     getMembers();
-  });
+  }, []);
 
   const onClickMember = (email) => {
     console.log("onClick member : ", email);
@@ -91,7 +92,9 @@ const Members = () => {
             <UserInfo>
               <MemberName>이름 : {member.name}</MemberName>
               <MemberEmail>이메일 : {member.email}</MemberEmail>
-              <MemberJoinDate>가입일 : {member.regDate}</MemberJoinDate>
+              <MemberJoinDate>
+                가입일 : {Common.formatDate(member.regDate)}
+              </MemberJoinDate>
             </UserInfo>
           </MemberInfoWrapper>
         ))}
