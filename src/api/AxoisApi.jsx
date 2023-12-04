@@ -54,8 +54,9 @@ const AxiosApi = {
   },
   // 카테고리 삭제
   cateDelete: async (categoryId) => {
+    console.log(categoryId);
     return await axios.delete(
-      EZEN_DOMAIN + `api/category/delete/${categoryId}`
+      EZEN_DOMAIN + `/api/category/delete/${categoryId}`
     );
   },
 };

@@ -8,6 +8,7 @@ import Members from "./pages/Members";
 import MemberInfo from "./pages/MemberInfo";
 import UserStore from "./context/UserStore";
 import ThemeSetting from "./pages/ThemeSetting";
+import Category from "./pages/board/Category";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/Members" element={<Members />} />
             <Route path="/MemberInfo/:email" element={<MemberInfo />} />
             <Route path="ThemeSetting" element={<ThemeSetting />} />
+            <Route path="category" element={<Category />} />
           </Route>
         </Routes>
       </Router>
