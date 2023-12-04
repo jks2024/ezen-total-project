@@ -59,6 +59,10 @@ const AxiosApi = {
       EZEN_DOMAIN + `/api/category/delete/${categoryId}`
     );
   },
+  // 게시글 조회
+  boardList: async () => {
+    return await axios.get(EZEN_DOMAIN + "/api/board/list");
+  },
 };
 
 export default AxiosApi;
