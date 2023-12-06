@@ -63,6 +63,17 @@ const AxiosApi = {
   boardList: async () => {
     return await axios.get(EZEN_DOMAIN + "/api/board/list");
   },
+  // 게시글 등록
+  boardWrite: async (email, title, categoryId, content, img) => {
+    const board = {
+      email: email,
+      title: title,
+      categoryId: categoryId,
+      content: content,
+      img: img,
+    };
+    return await axios.post(EZEN_DOMAIN + "/api/board/new", board);
+  },
 };
 
 export default AxiosApi;

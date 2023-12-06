@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import AxiosApi from "../../api/AxoisApi";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { timeFromNow } from "../../utils/Common"; // 경과 시간을 찍어 주기위해 만든 함수
+import Common from "../../utils/Common"; // 경과 시간을 찍어 주기위해 만든 함수
 
 const BoardContainer = styled.div`
   padding: 0 30px;
@@ -132,6 +132,7 @@ const BoardList = () => {
     };
     getCategories();
   }, []);
+
   useEffect(() => {
     const boardList = async () => {
       try {
@@ -155,12 +156,12 @@ const BoardList = () => {
     navigate("/boardWrite");
   };
   // 글상세보기 클릭 시
-  const handleDetailClick = (email) => {
-    navigate(`/boardDetail/${email}`);
+  const handleDetailClick = (boardId) => {
+    navigate(`/boardDetail/${boardId}`);
   };
   return (
     <BoardContainer>
-      <Title>게시 판 목록</Title>
+      <Title>게시판 목록</Title>
       <CategorySelect
         value={selectedCategory}
         onChange={(e) => setSelectedCategory(e.target.value)}
@@ -172,6 +173,29 @@ const BoardList = () => {
           </option>
         ))}
       </CategorySelect>
+      <BoardUl>
+        {boardList &&
+          boardList.map((board) => (
+            <BoardLi
+              key={board.boardId}
+              onClick={() => handleDetailClick(board.boardId)}
+            >
+              <BoardImage
+                src={board.img ? board.img : "http://via.placeholder.com/160"}
+                alt="Board img"
+              />
+              <BoardContentWrapper>
+                <BoardHeader>
+                  <BoardTitle>{board.title}</BoardTitle>
+                  <UserId>{board.email}</UserId>
+                </BoardHeader>
+                <BoardContent>{board.content}</BoardContent>
+                <BoardDate>{Common.timeFromNow(board.regDate)}</BoardDate>
+              </BoardContentWrapper>
+            </BoardLi>
+          ))}
+      </BoardUl>
+      <CircleFixedButton onClick={handleWriteClick} />
     </BoardContainer>
   );
 };

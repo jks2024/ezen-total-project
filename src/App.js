@@ -10,6 +10,7 @@ import UserStore from "./context/UserStore";
 import ThemeSetting from "./pages/ThemeSetting";
 import Category from "./pages/board/Category";
 import BoardList from "./pages/board/BoardList";
+import BoardWrite from "./pages/board/BoardWrite";
 
 function App() {
   return (
@@ -22,9 +23,10 @@ function App() {
             <Route path="/Home" element={<Home />} />
             <Route path="/Members" element={<Members />} />
             <Route path="/MemberInfo/:email" element={<MemberInfo />} />
-            <Route path="ThemeSetting" element={<ThemeSetting />} />
-            <Route path="category" element={<Category />} />
-            <Route path="boards" element={<BoardList />} />
+            <Route path="/ThemeSetting" element={<ThemeSetting />} />
+            <Route path="/category" element={<Category />} />
+            <Route path="/boards" element={<BoardList />} />
+            <Route path="/boardWrite" element={<BoardWrite />} />
           </Route>
         </Routes>
       </Router>
