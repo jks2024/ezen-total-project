@@ -191,11 +191,12 @@ const BoardWrite = () => {
           <option value="" disabled selected>
             카테고리를 선택하세요.
           </option>
-          {categories.map((category) => (
-            <option key={category.categoryId} value={category.categoryId}>
-              {category.categoryName}
-            </option>
-          ))}
+          {categories &&
+            categories.map((category) => (
+              <option key={category.categoryId} value={category.categoryId}>
+                {category.categoryName}
+              </option>
+            ))}
         </StyledSelect>
       </FieldContainer>
       <FieldContainer>

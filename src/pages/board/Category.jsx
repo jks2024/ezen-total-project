@@ -13,6 +13,7 @@ const Category = () => {
       // 카테고리 목록 보기
       try {
         const resp = await AxiosApi.cateList();
+        console.log(resp.data);
         if (resp.status === 200) setCategory(resp.data);
       } catch (e) {
         console.log(e);
