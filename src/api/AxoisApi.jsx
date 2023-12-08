@@ -74,6 +74,27 @@ const AxiosApi = {
     };
     return await axios.post(EZEN_DOMAIN + "/api/board/new", board);
   },
+  // 게시글 상세 조회
+  boardDetail: async (boardId) => {
+    return await axios.get(EZEN_DOMAIN + `/api/board/detail/${boardId}`);
+  },
+  // 게시글에 달린 댓글 조회
+  commentList: async (boardId) => {
+    return await axios.get(EZEN_DOMAIN + `/api/comment/list/${boardId}`);
+  },
+  // 댓글 쓰기
+  commentWrite: async (email, boardId, content) => {
+    const comment = {
+      boardId: boardId,
+      email: email,
+      content: content,
+    };
+    return await axios.post(EZEN_DOMAIN + `/api/comment/new`, comment);
+  },
+  // 게시글 삭제
+  boardDelete: async (id) => {
+    return await axios.delete(EZEN_DOMAIN + `/api/board/delete/${id}`);
+  },
 };
 
 export default AxiosApi;

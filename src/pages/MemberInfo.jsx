@@ -78,6 +78,7 @@ const MemberInfo = () => {
       try {
         const resp = await AxiosApi.memberGetOne(email);
         setMember(resp.data);
+        setUrl(resp.data.image);
       } catch (e) {
         console.log(e);
       }
