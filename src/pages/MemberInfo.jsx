@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
-import AxiosApi from "../api/AxoisApi";
 import styled from "styled-components";
+import { useState, useEffect } from "react";
+import AxiosApi from "../api/AxoisApi";
 import Common from "../utils/Common";
 import { storage } from "../api/firebase";
+import { useContext } from "react";
 import { UserContext } from "../context/UserStore";
 
 const Container = styled.div`
@@ -12,7 +13,7 @@ const Container = styled.div`
   border-radius: 8px;
   max-width: 320px;
   margin: 20px auto;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.1);
 `;
 
 const UserInfo = styled.div`
@@ -62,34 +63,45 @@ const SubmitButton = styled.button`
     background-color: #2c7d32;
   }
 `;
+
 const MemberInfo = () => {
-  const { email } = useParams();
-  const [member, setMember] = useState("");
-  const [editMode, setEditMode] = useState(false); // 편집 모드로 진입
-  const [editName, setEditName] = useState(""); // 이름 수정
-  const [isCurrentUser, setCurrentUser] = useState(false); // 현재 사용자와 유저가 같은 사람인지 확인
-  const [file, setFile] = useState(null); // 로컬에 있는 파일을 추가하는 상태
-  const [url, setUrl] = useState(""); // 파이어베이스에 업로드한 이미지 주소
-  const context = useContext(UserContext); // 전역 상태를 위한 부분
-  const { setName } = context;
+  const { email } = useParams(); // URL 파라미터에서 email 값 추출 (회원 리스트)
+  const context = useContext(UserContext); // UserContext 가져오기
+  const { setName, name } = context; // UserContext에서 name 상태와 setName 함수 추출
+  const [member, setMember] = useState(""); // 회원 정보
+  const [editMode, setEditMode] = useState(false); // 편집 모드
+  const [editName, setEditName] = useState(name); // 편집 중인 이름
+  const [loginUserEmail, setLoginUserEmail] = useState(""); // 현재 로그인 유저의 이메일
+  const [file, setFile] = useState(null); // 업로드할 파일
+  const [url, setUrl] = useState(""); // 미리보기 URL
 
   useEffect(() => {
+    const accessToken = Common.getAccessToken();
     const memberInfo = async () => {
       try {
-        const resp = await AxiosApi.memberGetOne(email);
-        setMember(resp.data);
-        setUrl(resp.data.image);
-      } catch (e) {
-        console.log(e);
+        const rsp = await AxiosApi.memberGetOne(email);
+        if (rsp.status === 200) {
+          setMember(rsp.data);
+          setUrl(rsp.data.image);
+        }
+        const rsp2 = await AxiosApi.memberGetInfo();
+        console.log(rsp2.data.email);
+        setLoginUserEmail(rsp2.data.email);
+      } catch (error) {
+        if (error.response.status === 401) {
+          await Common.handleUnauthorized();
+          const newToken = Common.getAccessToken();
+          if (newToken !== accessToken) {
+            const rsp = await AxiosApi.memberGetOne(email);
+            if (rsp.status === 200) {
+              setMember(rsp.data);
+              setUrl(rsp.data.image);
+            }
+          }
+        }
       }
     };
     memberInfo();
-    // 현재 로그인한 사용자의 이메일을 가져 옴
-    const loginUserEmail = localStorage.getItem("email");
-
-    if (loginUserEmail === email) {
-      setCurrentUser(true); // 로그인 유저와 회원 상세보기 유저가 같은 경우
-    }
   }, [email]);
 
   // 입력 필드 변경 처리
@@ -100,18 +112,42 @@ const MemberInfo = () => {
       setEditName(e.target.value);
     }
   };
-  // 회원 정보 업데이트 호출
+
+  // 회원 정보 업데이트 Axios 호출
   const handleSubmit = async (e) => {
-    e.preventDefault(); // 기본 이벤트를 취소?
-    const resp = await AxiosApi.memberUpdate(email, editName, url);
-    if (resp.status === 200) {
-      setEditMode(false);
-      setName(editName);
-      const resp = await AxiosApi.memberGetOne(email);
-      setMember(resp.data);
-      setUrl(resp.data.image);
+    const accessToken = Common.getAccessToken();
+    e.preventDefault();
+    try {
+      const rsp = await AxiosApi.memberUpdate(email, editName, url);
+      if (rsp.status === 200) {
+        setEditMode(false);
+        setName(editName);
+        const rsp = await AxiosApi.memberGetOne(email);
+        if (rsp.status === 200) {
+          setMember(rsp.data);
+          setUrl(rsp.data.image);
+        }
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        await Common.handleUnauthorized();
+        const newToken = Common.getAccessToken();
+        if (newToken !== accessToken) {
+          const rsp = await AxiosApi.memberUpdate(email, editName, url);
+          if (rsp.status === 200) {
+            setEditMode(false);
+            setName(editName);
+            const rsp = await AxiosApi.memberGetOne(email);
+            if (rsp.status === 200) {
+              setMember(rsp.data);
+              setUrl(rsp.data.image);
+            }
+          }
+        }
+      }
     }
   };
+
   const handleUploadClick = async () => {
     if (!file) {
       alert("파일을 선택해주세요.");
@@ -156,7 +192,7 @@ const MemberInfo = () => {
             <Label>가입일 : {Common.formatDate(member.regDate)}</Label>
           </Field>
           {/* 현재 사용자가 로그인한 사용자인 경우에만 편집 버튼 표시 */}
-          {isCurrentUser && (
+          {email === loginUserEmail && (
             <SubmitButton onClick={() => setEditMode(true)}>편집</SubmitButton>
           )}
         </>

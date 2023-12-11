@@ -63,16 +63,23 @@ const Members = () => {
 
   // 화면이 마운드 되고 난 시점에서 서버로 데이터 요청 후 수신 받음
   useEffect(() => {
-    const getMembers = async () => {
+    const accessToken = Common.getAccessToken();
+    const memberInfo = async () => {
       try {
-        const resp = await AxiosApi.memberGet(); // 전체 조회
-        console.log(resp.data);
-        setMembers(resp.data); // 서버에서 받아온 데이터로 상태를 갱신 함.
+        const rsp = await AxiosApi.memberGet(); // 전체 조회
+        if (rsp.status === 200) setMembers(rsp.data);
       } catch (e) {
-        console.log(e);
+        if (e.response.status === 401) {
+          await Common.handleUnauthorized();
+          const newToken = Common.getAccessToken();
+          if (newToken !== accessToken) {
+            const rsp = await AxiosApi.memberGet(); // 전체 조회
+            if (rsp.status === 200) setMembers(rsp.data);
+          }
+        }
       }
     };
-    getMembers();
+    memberInfo();
   }, []);
 
   const onClickMember = (email) => {

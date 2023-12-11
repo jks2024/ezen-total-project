@@ -52,7 +52,7 @@ const Signup = () => {
     } else {
       setMailMsg("올바른 형식 입니다.");
       setIsMail(true);
-      memberRegCheck(e.target.value);
+      //memberRegCheck(e.target.value);
     }
   };
   const onChangePw = (e) => {
@@ -84,7 +84,7 @@ const Signup = () => {
   const onClickLogin = async () => {
     const res = await AxiosApi.memberReg(inputEmail, inputPw, inputName);
     console.log(res.data);
-    if (res.data) {
+    if (res.data.email === inputEmail) {
       navigator("/");
     } else {
       setModalOpen(true);
