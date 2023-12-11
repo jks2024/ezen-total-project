@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AxiosApi from "../../api/AxoisApi";
 import styled from "styled-components";
 import { storage } from "../../api/firebase";
+import Common from "../../utils/Common";
 
 const FormContainer = styled.div`
   padding: 20px;
@@ -127,12 +128,22 @@ const BoardWrite = () => {
   const navigate = useNavigate(); // 글쓰기 완료 후 게시글 목록으로 이동하기 위해서
 
   useEffect(() => {
+    const accessToken = Common.getAccessToken();
     const getCategories = async () => {
       try {
-        const resp = await AxiosApi.cateList();
-        setCategories(resp.data);
+        const rsp = await AxiosApi.cateList();
+        console.log(rsp.data);
+        setCategories(rsp.data);
       } catch (e) {
-        console.log(e);
+        if (e.response.status === 401) {
+          await Common.handleUnauthorized();
+          const newToken = Common.getAccessToken();
+          if (newToken !== accessToken) {
+            const rsp = await AxiosApi.cateList();
+            console.log(rsp.data);
+            setCategories(rsp.data);
+          }
+        }
       }
     };
     getCategories();
@@ -144,18 +155,39 @@ const BoardWrite = () => {
     setContent(e.target.value);
   };
   const handleSubmit = async () => {
+    const accessToken = Common.getAccessToken();
     try {
-      const resp = await AxiosApi.boardWrite(
-        email,
+      const rsp = await AxiosApi.boardWrite(
         title,
         selectedCategory,
         content,
         url
       );
-      if (resp.data) navigate("/Boards");
-      else alert("글쓰기 실패");
+      if (rsp.data === true) {
+        alert("글쓰기 성공");
+        navigate("/Boards");
+      } else {
+        alert("글쓰기 실패");
+      }
     } catch (e) {
-      console.log(e);
+      if (e.response.status === 401) {
+        await Common.handleUnauthorized();
+        const newToken = Common.getAccessToken();
+        if (newToken !== accessToken) {
+          const rsp = await AxiosApi.boardWrite(
+            title,
+            selectedCategory,
+            content,
+            url
+          );
+          if (rsp.data === true) {
+            alert("글쓰기 성공");
+            navigate("/Boards");
+          } else {
+            alert("글쓰기 실패");
+          }
+        }
+      }
     }
   };
   const handleReset = () => {
