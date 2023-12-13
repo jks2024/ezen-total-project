@@ -12,6 +12,9 @@ import Category from "./pages/board/Category";
 import BoardList from "./pages/board/BoardList";
 import BoardWrite from "./pages/board/BoardWrite";
 import BoardDetail from "./pages/board/BoardDetail";
+import Movies from "./pages/Movie";
+import ChatList from "./pages/chatting/ChatList";
+import ChatRoomCreate from "./pages/chatting/ChatRoomCreate";
 
 function App() {
   return (
@@ -29,6 +32,9 @@ function App() {
             <Route path="/boards" element={<BoardList />} />
             <Route path="/boardWrite" element={<BoardWrite />} />
             <Route path="/BoardDetail/:id" element={<BoardDetail />} />
+            <Route path="/Movies" element={<Movies />} />
+            <Route path="/Chat" element={<ChatList />} />
+            <Route path="/Chat-create" element={<ChatRoomCreate />} />
           </Route>
         </Routes>
       </Router>
